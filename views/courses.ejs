@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+
+<div class="courses">
+  <% if (courses && courses.length > 0) { %>
+    <div class="course-list">
+        <% courses.forEach(function(course) { %>
+        <div class="course-item">
+          <div class="course-details">
+            <h5><%= course.course_name %> - $<%= course.price %></h5>
+            <h5><%= course.intructor_id %></h5>
+            <h4><%= course.department %></h4>
+            <p class="cDesc"><%= course.c_description %></p>
+          </div>
+          <div class="course-credits"><%= course.credits %> credits</div>
+          <button class="apply-button">Apply</button>
+        </div>
+  <% }); %>
+  <% } else { %>
+      <h2 style="text-align: center;">No Courses found</h2>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>
+
+
+<!-- 
+Log: 
+Left off on the apply button functionality
+-->

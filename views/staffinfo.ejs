@@ -1,0 +1,21 @@
+<%- include('partials/header') %>
+
+<div class="staff-page">
+    <div class="staff-container">
+        <% if (instructors && instructors.length > 0) { %>
+            <% instructors.forEach(function(instructor) { %>
+                <div class="staff-card">
+                    <img src="/static/profile.jpg" alt="Staff Photo">
+                    <h3><%= instructor.first_name + ' ' + instructor.last_name %></h3>
+                    <p><%= instructor.email %></p>
+                    <p><%= instructor.phone_number %></p>
+                    <p><%= instructor.department %></p>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <h2 style="text-align: center;">No Instructors found</h2>
+        <% } %>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

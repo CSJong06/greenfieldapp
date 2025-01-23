@@ -1,0 +1,32 @@
+<%- include('partials/header') %>
+
+<div class="profilePage">
+  <% if (studentUser) { %>
+    <div class="student-card">
+      <div class="student-header">
+        <div class="student-avatar">
+          <img src="/static/profile.jpg" class="avatar"></img>
+          <div>
+            <p class="student-details"><%= studentUser.first_name + ' ' + studentUser.last_name %></p>
+            <p class="student-details"><p><%= studentUser.date_of_birth %></p></p>
+          </div>
+        </div>
+        <p class="status"><%= studentUser.s_status %></p>
+      </div>
+      <div class="student-body">
+        <p><span>Email:</span> <%= studentUser.email %></p>
+        <p><span>Phone Number:</span> <%= studentUser.phone_number %></p>
+        <p><span>Address:</span></p>
+        <p><%= studentUser.address %><br><%= studentUser.city %>, <%= studentUser.state %></p>
+      </div>
+      <div class="student-footer">
+        <p><span>Enrollment date:</span> <%= studentUser.enrollment_date %></p>
+      </div>
+    </div>
+<% } else { %>
+  <h2 style="text-align: center;">Can't Find Profile</h2>
+<% } %>
+  
+</div>
+
+<%- include('partials/footer') %>
