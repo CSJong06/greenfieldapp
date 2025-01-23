@@ -11,7 +11,7 @@ const enrollment = dbconn.define('Enrollment', {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Students',  // Refers to the Student table
+        model: 'students',  // Refers to the Student table
         key: 'student_id',
       },
     },
@@ -19,7 +19,7 @@ const enrollment = dbconn.define('Enrollment', {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Courses',  // Refers to the Course table
+        model: 'courses',  // Refers to the Course table
         key: 'course_id',
       },
     },

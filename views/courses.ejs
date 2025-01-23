@@ -12,18 +12,18 @@
             <p class="cDesc"><%= course.c_description %></p>
           </div>
           <div class="course-credits"><%= course.credits %> credits</div>
-          <button class="apply-button">Apply</button>
+          <form action="/enroll" method="POST">
+              <input type="hidden" name="courseId" value="<%= course.course_id %>">
+              <button type="submit" class="apply-button">Apply</button>
+          </form>
         </div>
-  <% }); %>
+        <% }); %>
+    </div>
   <% } else { %>
       <h2 style="text-align: center;">No Courses found</h2>
   <% } %>
 </div>
 
+<script src="/js/course.js"></script>
+
 <%- include('partials/footer') %>
-
-
-<!-- 
-Log: 
-Left off on the apply button functionality
--->
