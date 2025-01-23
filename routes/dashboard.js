@@ -68,16 +68,14 @@ router.post('/enroll', async (req, res) => {
 });
 
 router.get('/dashboard', requireAuth, async (req, res) => {
-    let course_id
+    
     try {
-        const studentId = req.session.user.student_id;
-        course_id = await enrollment.findAll({
-            where: { student_id: studentId }, 
-        });
-        // console.log("ENROLLMENT::1", enrolledCourses.Enrollment.defaultValues.course_id)
-        // console.log("ENROLLMENT::2", enrolledCourses.length)
-        console.log("ENROLLMENT::2", course_id.student_id)
-
+        const studentUser = req.session.user.student_id
+        const enrollmentTable = await enrollment.findOne({ where: { student_id: studentUser } });
+        console.log(enrollmentTable.course_id);
+        
+        const enrolledCourses = await course.findAll({ where: {course_id: enrollmentTable.course_id }});
+        console.log(enrolledCourses)
         return res.render('dashboard', { enrolledCourses });
     } catch (error) {
         console.error('Error fetching enrolled courses', error);

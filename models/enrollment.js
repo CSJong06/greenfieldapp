@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import dbconn from "../config/dbconn.js";
 
-const enrollment = dbconn.define('Enrollment', {
+const enrollment = dbconn.define('enrollment', {
     enrollment_id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -40,5 +40,5 @@ const enrollment = dbconn.define('Enrollment', {
     upadtedAt: 'updatedAt'
 });
   
-export default enrollment
+export default enrollment;
   
