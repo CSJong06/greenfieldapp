@@ -4,7 +4,19 @@
     
     <div class="course-list">
         <h6>Enrolled Courses</h6>
-        <h1><%= enrolledCourses.course_name %></h1>
+        <% if (enrolledCourses && enrolledCourses.length > 0) { %>
+          <% enrolledCourses.forEach(function(enrollment) { %>
+              <div class="course">
+                  <div>
+                      <h3><%= enrollment.course.course_name %></h3>
+                      <p><%= enrollment.course.c_description %></p>
+                  </div>
+                  <div><h2><%= enrollment.grade || 'N/A' %></h2></div>
+              </div>
+          <% }); %>
+      <% } else { %>
+          <h2 style="text-align: center;">No Enrolled Courses</h2>
+      <% } %>
     </div>
 
     <!-- Notifications -->

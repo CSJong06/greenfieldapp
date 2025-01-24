@@ -166,50 +166,50 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+}
 
-  .course-list {
+.course-list {
     max-height: 400px;
     overflow-y: auto;
     padding-right: 10px;
-  }
+}
 
-  .course-item {
+.course-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #f4f4f4;
-    padding: 15px;
+    padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+}
 
-  .course-details {
+.course-details {
     flex-grow: 1;
-  }
+}
 
-  .course-details h4 {
+.course-details h4 {
     margin: 0;
     font-size: 16px;
     color: #222;
-  }
+}
 
-  .course-details p {
+.course-details p {
     margin: 5px 0 0;
     font-size: 14px;
     color: #555;
-  }
+}
 
-  .course-credits {
+.course-credits {
     font-size: 14px;
     font-weight: bold;
     width: 75px;
     color: #666;
     margin-right: 10px;
-  }
+}
 
-  .apply-button {
+.apply-button {
     background-color: #007BFF;
     color: #fff;
     border: none;
@@ -218,17 +218,17 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.2s ease;
-  }
+}
 
-  .apply-button:hover {
+.apply-button:hover {
     background-color: #0056b3;
-  }
+}
 
-  .cDesc{
+.cDesc{
     width: 80%;
-  }
+}
 
-  .profilePage{
+.profilePage{
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     margin: 0;
@@ -237,8 +237,9 @@ body {
     justify-content: center;
     align-items: center;
     height: 600px;
-  }
-  .student-card {
+}
+
+.student-card {
     height: 500px;
     width: 400px;
     background-color: #ffffff;
@@ -248,48 +249,106 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-  }
+}
 
-  .student-header {
+.student-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
+}
 
-  .student-avatar {
+.student-avatar {
     display: flex;
     align-items: center;
     gap: 15px;
-  }
+}
 
-  .avatar {
+.avatar {
     width: 60px;
     height: 60px;
     background-color: #d9d9d9;
     border-radius: 50%;
     border-style: solid;
-  }
+}
 
-  .student-details {
+.student-details {
     font-size: 14px;
     margin-bottom: 0px;
-  }
+}
 
-  .status {
+.status {
     color: green;
     font-weight: bold;
-  }
+}
 
-  .student-body {
+.student-body {
     margin-top: 15px;
     font-size: 14px;
     line-height: 1.6;
-  }
+}
 
-  .student-body span {
+.student-body span {
     font-weight: bold;
-  }
+}
 
-  .student-footer{
+.student-footer{
     margin-top: 30%;
-  }
+}
+
+.payment-container {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 400px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.payment-page{
+    display: flex;
+    flex-direction: row;
+}
+
+.course-item:last-child {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+select, input, button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: auto;
+}
+
+.dropdown select {
+    width: auto;
+}
+
+.enrolled-courses {
+    max-height: 400px; /* Set a maximum height for the container */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 10px; /* Optional: Add some padding */
+}

@@ -8,7 +8,7 @@ import { requireAuth } from './auth.js'; // Importing requireAuth middleware
 
 const router = express.Router();
 
-router.get('/courses', async (req, res) => {
+router.get('/courses', requireAuth, async (req, res) => {
     try {
         const courses = await course.findAll();
         return res.render('courses', { courses });
@@ -18,7 +18,7 @@ router.get('/courses', async (req, res) => {
 });
 
 // staff info route
-router.get('/staffinfo', async (req, res) => {
+router.get('/staffinfo', requireAuth, async (req, res) => {
     try {
         // creating the object
         const instructors = await instructor.findAll();
@@ -30,11 +30,23 @@ router.get('/staffinfo', async (req, res) => {
 });
 
 // Payment route
-router.get('/payments', async (req, res) => {
+router.get('/payments', requireAuth, async (req, res) => {
     try {
-        res.render('payments');
+        const studentUser = req.session.user.student_id
+        const enrollmentTable = await enrollment.findAll({ where: { student_id: studentUser } });
+        
+        // Fetching course details for each enrollment
+        const enrolledCourses = await Promise.all(enrollmentTable.map(async (enrollment) => {
+            const courseDetails = await course.findOne({ where: { course_id: enrollment.course_id } });
+            return {
+                course: courseDetails,
+            };
+        }));
+
+        console.log("here damn::", enrolledCourses.course_name)
+        return res.render('payments', { enrolledCourses });
     } catch (error) {
-        console.error('Error fetching payments', error);
+        console.error('Error fetching enrolled courses', error);
     }
 });
 
@@ -71,18 +83,25 @@ router.get('/dashboard', requireAuth, async (req, res) => {
     
     try {
         const studentUser = req.session.user.student_id
-        const enrollmentTable = await enrollment.findOne({ where: { student_id: studentUser } });
-        console.log(enrollmentTable.course_id);
+        const enrollmentTable = await enrollment.findAll({ where: { student_id: studentUser } });
         
-        const enrolledCourses = await course.findAll({ where: {course_id: enrollmentTable.course_id }});
-        console.log(enrolledCourses)
+        // Fetching course details for each enrollment
+        const enrolledCourses = await Promise.all(enrollmentTable.map(async (enrollment) => {
+            const courseDetails = await course.findOne({ where: { course_id: enrollment.course_id } });
+            return {
+                course: courseDetails,
+                grade: enrollment.grade
+            };
+        }));
+
+        console.log('Enrolled Courses:');
+        enrolledCourses.forEach(course => {
+            console.log(course.course.course_name);
+        });
         return res.render('dashboard', { enrolledCourses });
     } catch (error) {
         console.error('Error fetching enrolled courses', error);
     }
 });
-
-
-
 
 export default router;
