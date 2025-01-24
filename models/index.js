@@ -48,7 +48,20 @@ student.hasMany(payment, {
     as: 'course',
   });
   
-  // 5. Enrollment ↔ Student ↔ Course (Many-to-Many through Enrollment)
+  
+// 5. Enrollment ↔ Student ↔ Course (Many-to-Many through Enrollment)
+
+// 6. Course ↔ Payment (One-to-Many)
+course.hasMany(payment, {
+    foreignKey: 'course_id',
+    as: 'payments', // Alias for the relationship
+    onDelete: 'CASCADE',
+});
+payment.belongsTo(course, {
+    foreignKey: 'course_id',
+    as: 'course',
+});
+
   student.belongsToMany(course, {
     through: enrollment, // Join table
     foreignKey: 'student_id',
@@ -61,4 +74,3 @@ student.hasMany(payment, {
     otherKey: 'student_id',
     as: 'studentsEnrolled',
   });
-  

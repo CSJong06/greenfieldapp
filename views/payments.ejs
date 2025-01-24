@@ -2,58 +2,85 @@
 <div class="payment-page">
     <div class="payment-container">
         <h3>Courses enrolled</h3>
-        <% if (enrolledCourses && enrolledCourses.length > 0) { %>
-            <% enrolledCourses.forEach(function(enrollment) { %>
+        <div class="enrolled-courses">
+            <% if (enrolledCourses && enrolledCourses.length > 0) { %>
+                <% enrolledCourses.forEach(function(enrollment) { %>
+                    <div>
+                        <div class="course-item">
+                            <div>
+                                <h5><%= enrollment.course.course_name %></h5>
+                                <p style="width: 95%;"><%= enrollment.course.c_description %></p>
+                            </div>
+                            <div>
+                                <h4 style="text-align: center;">$<%= enrollment.course.price %></h4>
+                                <form action="/select-course" method="GET" class="select-course-form">
+                                    <input type="hidden" name="courseId" value="<%= enrollment.course.course_id %>">
+                                    <button type="submit">Select</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div></div>
+                <h2 style="text-align: center; background-color: #ddd;" >No Enrolled Courses</h2>
+            <% } %>
+        </div>
+    </div>
+    
+    <div class="payment-container">
+        <h3>Transactions</h3>
+        
+        <div id="transaction-list">
+            <% if (selectedCourse) { %>
+                <div class="course-item">
+                    <div>
+                        <h5 style="margin-bottom: 0%;"><%= selectedCourse.course_name %></h5>
+                        <p><%= selectedCourse.c_description %></p>
+                    </div>
+                    <div>
+                        <h4>$<%= selectedCourse.price %></h4>
+                    </div>
+                </div>
+            <% } else { %>
+                <p style="text-align: center;">Please select a course</p>
+            <% } %>
+        </div>
+
+        <form action="payment" method="post">
+            <input type="hidden" name="courseId" value="<%= selectedCourse ? selectedCourse.course_id : '' %>">
+            <div class="form-group">
+                <label for="payment-type">Type</label>
+                <select id="payment-type" name="paymentMethod">
+                    <option value="credit card">Credit Card</option>
+                    <option value="bank transfer">Bank Transfer</option>
+                    <option value="cash">Cash</option>
+                </select>
+            </div>
+            
+            <button type="submit">Pay</button>
+        </form>
+    </div>
+    
+    <div class="payment-container">
+        <h3>Payment Log</h3>
+        <% if (paidCourses && paidCourses.length > 0) { %>
+            <% paidCourses.forEach(function(paidCourse) { %>
                 <div class="enrolled-courses">
                     <div class="course-item">
                         <div>
-                            <h5><%= enrollment.course.course_name %></h5>
-                            <p style="width: 95%;"><%= enrollment.course.c_description %></p>
-                            
-                        </div>
-                        <div>
-                            <h4 style="text-align: center;">$<%= enrollment.course.price %></</h4>
-                            <button>Select</button>
+                            <h5><%= paidCourse.course.course_name %></h5>
+                            <p style="width: 95%;"><%= paidCourse.course.c_description %></p>
                         </div>
                     </div>
                 </div>
             <% }); %>
         <% } else { %>
-            <h2 style="text-align: center;">No Enrolled Courses</h2>
+            <p style="text-align: center;">No Transaction History</p>
         <% } %>
-        
-        
-    </div>
-    
-    <div class="payment-container">
-        <h3>Transactions</h3>
-        <div class="course-item">
-            <div>
-                <p style="margin-bottom: 0%;">Course</p>
-                <p>Description</p>
-            </div>
-            <div>
-                <span>Price</span>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="payment-type">Type</label>
-            <select id="payment-type">
-                <option value="debit-credit">Debit/Credit</option>
-                <option value="cash">Cash</option>
-                <option value="check">Check</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="amount">Amount</label>
-            <input type="text" id="amount" placeholder="Enter Amount">
-        </div>
-        <button type="submit">Submit</button>
-    </div>
-    
-    <div class="payment-container">
-        <h3>Payment Log</h3>
     </div>
 </div>
+
+<script src="/js/payments.js"></script>
+
 <%- include('partials/footer') %>

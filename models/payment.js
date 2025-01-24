@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import dbconn from "../config/dbconn.js";
 
-const payment = dbconn.define('Payment', {
+const payment = dbconn.define('payment', {
     payment_id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -11,24 +11,24 @@ const payment = dbconn.define('Payment', {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Students',  // Refers to the Student table
+        model: 'students',  // Refers to the Student table
         key: 'student_id',
+      },
+    },
+    course_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'course',  // Refers to the Student table
+        key: 'course_id',
       },
     },
     amount: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
-    payment_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
     payment_method: {
       type: DataTypes.ENUM('credit card', 'bank transfer', 'cash', 'other'),
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.ENUM('completed', 'pending', 'failed'),
       allowNull: false,
     },
   },{
