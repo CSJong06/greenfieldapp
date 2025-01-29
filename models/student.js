@@ -50,6 +50,10 @@ const student = dbconn.define('student', {
     type: DataTypes.ENUM('active', 'graduated', 'inactive'),
     defaultValue: 'active',
   },
+  balance: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0.00,
+  },
 },{
     tableName: 'student', 
     createdAt: 'enrollment_date',

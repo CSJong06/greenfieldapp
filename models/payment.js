@@ -26,11 +26,7 @@ const payment = dbconn.define('payment', {
     amount: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-    },
-    payment_method: {
-      type: DataTypes.ENUM('credit card', 'bank transfer', 'cash', 'other'),
-      allowNull: false,
-    },
+    }
   },{
     tableName: 'payment', 
     createdAt: 'createdAt',

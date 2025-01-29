@@ -28,70 +28,6 @@ router.get('/staffinfo', requireAuth, async (req, res) => {
     }
 });
 
-// Updated Payment route
-// router.get('/payments', requireAuth, async (req, res) => {
-//     try {
-//         const studentUser = req.session.user.student_id;
-
-//         // Fetch enrolled courses
-//         const enrollmentTable = await enrollment.findAll({ where: { student_id: studentUser } });
-//         const enrolledCourses = await Promise.all(enrollmentTable.map(async (enrollment) => {
-//             const courseDetails = await course.findOne({ where: { course_id: enrollment.course_id } });
-//             return {
-//                 course: courseDetails,
-//             };
-//         }));
-
-//         const paymentsTable = await payment.findAll({ where: { student_id: studentUser } });
-        
-//         // Fetch paid courses
-//         const paidCourses = await Promise.all(paymentsTable.map(async (payment) => {
-//             const courseDetails = await course.findOne({ where: { course_id: payment.course_id } });
-//             return {
-//                 course: courseDetails,
-//             };
-//         }));
-
-//     }
-// });
-
-// router.post("/payment", requireAuth, async (req, res) => {
-//     try {
-//         const { courseId, paymentMethod } = req.body;
-//         const studentUser = req.session.user.student_id;
-//         const selectedCourse = await course.findByPk(courseId);
-//         const coursePrice = selectedCourse.price;
-        
-//         const enrollmentTable = await enrollment.findAll({ where: { student_id: studentUser } });
-//         const enrolledCourses = await Promise.all(enrollmentTable.map(async (enrollment) => {
-//             const courseDetails = await course.findOne({ where: { course_id: enrollment.course_id } });
-//             return {
-//                 course: courseDetails,
-//             };
-//         }));
-
-//         const paymentsTable = await payment.findAll({where: {student_id: studentUser}});
-//         const paidCourses = await Promise.all(paymentsTable.map(async (payment) => {
-//             const courseDetails = await course.findOne({ where: { course_id: payment.course_id } });
-//             return {
-//                 course: courseDetails,
-//             };
-//         }));
-
-//         const newPayment = await payment.create({
-//             student_id: studentUser,
-//             course_id: courseId,
-//             payment_method: paymentMethod,
-//             amount: coursePrice
-//         });
-    
-//         res.redirect("/payments");
-        
-//     } catch (error) {
-//         console.error(error);
-//     }
-// });
-
 router.get('/profile', requireAuth, async (req, res) => {
     try {
         const studentUser = await student.findOne({
@@ -145,37 +81,83 @@ router.get('/dashboard', requireAuth, async (req, res) => {
     }
 });
 
-// Updated route to move a course to transactions without database interaction
-// router.get('/select-course', requireAuth, async (req, res) => {
-//     const { courseId } = req.query; // Updated line
-    
-//     try {
-//         const studentUser = req.session.user.student_id;
-//         const enrollmentTable = await enrollment.findAll({ where: { student_id: studentUser } });
+// Updated Payment route
+router.get('/payments', requireAuth, async (req, res) => {
+    try {
+        const studentUser = req.session.user.student_id;
+        const studentTable = await student.findOne({ where: { student_id: studentUser } });
         
-//         const enrolledCourses = await Promise.all(enrollmentTable.map(async (enrollment) => {
-//             const courseDetails = await course.findOne({ where: { course_id: enrollment.course_id } });
-//             return {
-//                 course: courseDetails,
-//                 grade: enrollment.grade
-//             };
-//         }));
+        // Fetch enrolled courses
+        const enrollmentTable = await enrollment.findAll({ where: { student_id: studentUser } });
+        const enrolledCourses = await Promise.all(enrollmentTable.map(async (enrollment) => {
+            const courseDetails = await course.findOne({ where: { course_id: enrollment.course_id } });
+            return {
+                course: courseDetails,
+            };
+        }));
 
-//         const selectedCourse = await course.findByPk(courseId);
+        const paymentTable = await payment.findAll({where: {student_id: studentUser}});
+        const paidCourseIDs = paymentTable.map(payment => payment.course_id);
+        const paidCourses = await course.findAll({where: {course_id: paidCourseIDs}});
+        
+        // Retrieve payment dates
+        const paymentDates = paymentTable.map(payment => payment.createdAt);
 
-//         const paymentsTable = await payment.findAll({where: {student_id: studentUser}});
-//         const paidCourses = await Promise.all(paymentsTable.map(async (payment) => {
-//             const courseDetails = await course.findOne({ where: { course_id: payment.course_id } });
-//             return {
-//                 course: courseDetails,
-//             };
-//         }));
+        res.render('payments', { enrolledCourses, studentTable, paidCourses, paymentDates });
+    } catch (error) {
+        console.error('Error fetching payments', error);
+    }
+});
 
-//         return res.render("payments", { enrolledCourses, selectedCourse, paidCourses });
-//     } catch (error) {
-//         console.error(error);
-//     }
-// });
+router.post("/balance", requireAuth, async (req, res) => {
+    try {
+        const studentUser = req.session.user.student_id;
+        const studentTable = await student.findOne({ where: { student_id: studentUser } });
+        const currentBalance = parseFloat(studentTable.balance)
+        let studentBalance;
+        const {paymentAmount, paymentMethod} = req.body;
 
+        if(paymentAmount > 0){
+            studentBalance = currentBalance + parseFloat(paymentAmount);
+            await student.update({ balance: studentBalance }, { where: { student_id: studentUser } });
+        }
+        else{
+            req.flash("error", "Invalid payment amount");
+        }
+        
+        res.redirect("/payments")
+    } catch (error) {
+        console.error(error)
+    }
+});
+
+// Updated pay route to capture courseId
+router.post("/pay", requireAuth, async (req, res) => {
+    try {
+        const studentUser = req.session.user.student_id;
+        const studentTable = await student.findOne({ where: { student_id: studentUser } });
+        const currentBalance = parseFloat(studentTable.balance);
+        
+        const selectedCourse = req.body.courseId; 
+        const courseDetails = await course.findOne({ where: { course_id: selectedCourse } });
+        
+        const coursePrice = courseDetails.price;
+
+        if (currentBalance < coursePrice) {
+            req.flash("error", "Insufficient Funds");
+        } else {
+            await payment.create({
+                student_id: studentUser,
+                course_id: selectedCourse,
+                amount: coursePrice
+            });
+            await student.update({ balance: currentBalance - coursePrice }, { where: { student_id: studentUser } });
+        }
+        
+        res.redirect("/payments");
+    } catch (error) {
+        console.error(error);
+    }
+});
 
 export default router;
