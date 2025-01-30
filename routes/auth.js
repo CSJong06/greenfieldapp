@@ -1,3 +1,4 @@
+//imports
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import { Op } from 'sequelize';
@@ -15,7 +16,7 @@ const requireAuth = (req, res, next) => {
 
 // Route to register
 router.get('/register', (req, res) => {
-  res.render('register'); // On request => respond with rendering register page
+  res.render('register'); // On request => render register page
 });
 
 // Register attempt
@@ -56,7 +57,7 @@ router.post('/register', async (req, res) => {
       phone_number: phone_number
     });
 
-    // Redirects them to dashboard
+    // Redirects them to login
     return res.redirect('/');
   } catch (error) {
     console.error(error);
@@ -67,7 +68,7 @@ router.post('/register', async (req, res) => {
 
 // Route to login
 router.get('/', (req, res) => {
-  res.render('login'); // On request => respond with rendering login page
+  res.render('login'); // On request => render login page
 });
 
 // Login attempt
